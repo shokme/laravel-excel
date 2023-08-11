@@ -2,6 +2,7 @@
 
 namespace Maatwebsite\Excel\Jobs;
 
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -22,7 +23,7 @@ use Throwable;
 
 class ReadChunk implements ShouldQueue
 {
-    use Queueable, HasEventBus, InteractsWithQueue;
+    use Batchable, Queueable, HasEventBus, InteractsWithQueue;
 
     /**
      * @var int

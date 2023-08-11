@@ -2,10 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [4.0] - 2023-08-11
 
 ### Fixed
 - Bug preventing WithChunkReading from working with multiple sheets when using ToCollection or ToArray   
+
+### Added
+- Add support of batch, use `ShouldBatch` to use laravel batch feature
 
 ## [3.1.47] - 2023-02-16
 

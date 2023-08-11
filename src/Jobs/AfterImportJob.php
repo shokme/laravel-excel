@@ -6,6 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\ImportFailed;
+use Maatwebsite\Excel\Factories\ReaderFactory;
+use Maatwebsite\Excel\Files\TemporaryFile;
 use Maatwebsite\Excel\HasEventBus;
 use Maatwebsite\Excel\Reader;
 use Throwable;
@@ -20,15 +22,15 @@ class AfterImportJob implements ShouldQueue
     private $import;
 
     /**
-     * @var Reader
+     * @var Reader|TemporaryFile
      */
     private $reader;
 
     /**
      * @param  object  $import
-     * @param  Reader  $reader
+     * @param  Reader|TemporaryFile  $reader
      */
-    public function __construct($import, Reader $reader)
+    public function __construct($import, Reader|TemporaryFile $reader)
     {
         $this->import = $import;
         $this->reader = $reader;
@@ -36,6 +38,13 @@ class AfterImportJob implements ShouldQueue
 
     public function handle()
     {
+        if ($this->reader instanceof TemporaryFile) {
+            $this->reader = ReaderFactory::make(
+                $this->import,
+                $this->reader
+            );
+        }
+
         if ($this->import instanceof ShouldQueue && $this->import instanceof WithEvents) {
             $this->reader->clearListeners();
             $this->reader->registerListeners($this->import->registerEvents());
